@@ -117,7 +117,7 @@ function Breadcrumbs<T>(props: SpectrumBreadcrumbsProps<T>, ref: DOMRef) {
         yield computeVisibleItems(newVisibleItems);
       }
     });
-  }, [listRef, children, setVisibleItems, showRoot, isMultiline]);
+  }, [setVisibleItems, childArray.length, showRoot, isMultiline]);
 
   useEffect(() => {
     window.addEventListener('resize', updateOverflow, false);

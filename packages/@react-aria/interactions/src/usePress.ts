@@ -111,11 +111,11 @@ export function usePress(props: PressHookProps): PressResult {
   let addGlobalListener = useCallback((eventTarget, type, listener, options) => {
     globalListeners.current.set(listener, {type, eventTarget, options});
     eventTarget.addEventListener(type, listener, options);
-  }, [globalListeners.current]);
+  }, []);
   let removeGlobalListener = useCallback((eventTarget, type, listener, options) => {
     eventTarget.removeEventListener(type, listener, options);
     globalListeners.current.delete(listener);
-  }, [globalListeners.current]);
+  }, []);
 
   let pressProps = useMemo(() => {
     let state = ref.current;
@@ -556,7 +556,7 @@ export function usePress(props: PressHookProps): PressResult {
     }
 
     return pressProps;
-  }, [onPress, onPressStart, onPressEnd, onPressChange, onPressUp, isDisabled]);
+  }, [isDisabled, onPressStart, onPressChange, onPressEnd, onPress, onPressUp, addGlobalListener, removeGlobalListener]);
 
   // eslint-disable-next-line arrow-body-style
   useEffect(() => {
@@ -565,7 +565,7 @@ export function usePress(props: PressHookProps): PressResult {
         removeGlobalListener(value.eventTarget, value.type, key, value.options);
       });
     };
-  }, [globalListeners.current]);
+  }, [removeGlobalListener]);
 
   return {
     isPressed: isPressedProp || isPressed,

@@ -299,7 +299,7 @@ function TableVirtualizer({layout, collection, focusedKey, renderView, renderWra
         collection.body.props.onLoadMore();
       }
     }
-  }, [collection.body.props, state.setVisibleRect, state.virtualizer]);
+  }, [collection.body.props, state]);
 
   return (
     <div

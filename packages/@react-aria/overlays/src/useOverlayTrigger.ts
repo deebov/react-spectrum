@@ -57,7 +57,7 @@ export function useOverlayTrigger(props: OverlayTriggerProps, state: OverlayTrig
     return () => {
       window.removeEventListener('scroll', onScroll, true);
     };
-  }, [isOpen, ref]);
+  }, [isOpen, ref, state]);
 
   // Aria 1.1 supports multiple values for aria-haspopup other than just menus.
   // https://www.w3.org/TR/wai-aria-1.1/#aria-haspopup

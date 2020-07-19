@@ -58,7 +58,7 @@ export function useTreeState<T extends object>(props: TreeProps<T>): TreeState<T
     if (selectionState.focusedKey != null && !tree.getItem(selectionState.focusedKey)) {
       selectionState.setFocusedKey(null);
     }
-  }, [tree, selectionState.focusedKey]);
+  }, [tree, selectionState.focusedKey, selectionState]);
 
   let onToggle = (key: Key) => {
     setExpandedKeys(expandedKeys => toggleKey(expandedKeys, key));

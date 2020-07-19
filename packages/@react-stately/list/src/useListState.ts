@@ -45,7 +45,7 @@ export function useListState<T extends object>(props: ListProps<T>): ListState<T
     if (selectionState.focusedKey != null && !collection.getItem(selectionState.focusedKey)) {
       selectionState.setFocusedKey(null);
     }
-  }, [collection, selectionState.focusedKey]);
+  }, [collection, selectionState, selectionState.focusedKey]);
 
   return {
     collection,

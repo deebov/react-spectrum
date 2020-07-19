@@ -24,91 +24,105 @@ import {useNumberField} from '@react-aria/numberfield';
 import {useNumberFieldState} from '@react-stately/numberfield';
 import {useProviderProps} from '@react-spectrum/provider';
 
-export const NumberField = React.forwardRef((props: SpectrumNumberFieldProps, ref: RefObject<HTMLDivElement>) => {
-  props = useProviderProps(props);
-  let {
-    // formatOptions,
-    isQuiet,
-    isDisabled,
-    showStepper = true,
-    autoFocus,
-    ...otherProps
-  } = props;
-  let {styleProps} = useStyleProps(props);
-  let state = useNumberFieldState(otherProps);
-  let inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>();
-  let {
-    numberFieldProps,
-    labelProps,
-    inputFieldProps,
-    incrementButtonProps,
-    decrementButtonProps
-  } = useNumberField(props, state, inputRef);
+export const NumberField = React.forwardRef(
+  (props: SpectrumNumberFieldProps, ref: RefObject<HTMLDivElement>) => {
+    props = useProviderProps(props);
+    let {
+      // formatOptions,
+      isQuiet,
+      isDisabled,
+      showStepper = true,
+      autoFocus,
+      ...otherProps
+    } = props;
+    let {styleProps} = useStyleProps(props);
+    let state = useNumberFieldState(otherProps);
+    let inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>();
+    let {
+      numberFieldProps,
+      labelProps,
+      inputFieldProps,
+      incrementButtonProps,
+      decrementButtonProps
+    } = useNumberField(props, state, inputRef);
 
-  let className = classNames(
-    inputgroupStyles,
-    'spectrum-InputGroup',
-    {
-      'spectrum-InputGroup--quiet': isQuiet,
-      'is-invalid': state.validationState === 'invalid',
-      'is-disabled': isDisabled
-    },
-    classNames(
-      stepperStyle,
-      'spectrum-Stepper',
-      {'spectrum-Stepper--quiet': isQuiet},
-      styleProps.className
-    )
-  );
+    let className = classNames(
+      inputgroupStyles,
+      'spectrum-InputGroup',
+      {
+        'spectrum-InputGroup--quiet': isQuiet,
+        'is-invalid': state.validationState === 'invalid',
+        'is-disabled': isDisabled
+      },
+      classNames(
+        stepperStyle,
+        'spectrum-Stepper',
+        {'spectrum-Stepper--quiet': isQuiet},
+        styleProps.className
+      )
+    );
 
-  return (
-    <FocusRing
-      within
-      focusClass={classNames(inputgroupStyles, 'is-focused', classNames(stepperStyle, 'is-focused'))}
-      focusRingClass={classNames(inputgroupStyles, 'focus-ring', classNames(stepperStyle, 'focus-ring'))}
-      autoFocus={autoFocus}>
-      <div
-        {...styleProps}
-        {...numberFieldProps}
-        ref={ref}
-        className={className}>
-        <TextFieldBase
-          isQuiet={isQuiet}
-          inputClassName={classNames(stepperStyle, 'spectrum-Stepper-input')}
-          inputRef={inputRef}
-          labelProps={labelProps}
-          inputProps={inputFieldProps} />
-        {showStepper &&
-        <span
-          className={classNames(stepperStyle, 'spectrum-Stepper-buttons')}
-          role="presentation">
-          <ActionButton
-            UNSAFE_className={
-              classNames(
-                stepperStyle,
-                'spectrum-Stepper-stepUp',
-                'spectrum-ActionButton'
-              )
-            }
-            {...incrementButtonProps}
-            isQuiet={isQuiet}>
-            <ChevronUpSmall UNSAFE_className={classNames(stepperStyle, 'spectrum-Stepper-stepUpIcon')} />
-          </ActionButton>
-          <ActionButton
-            UNSAFE_className={
-              classNames(
-                stepperStyle,
-                'spectrum-Stepper-stepDown',
-                'spectrum-ActionButton'
-              )
-            }
-            {...decrementButtonProps}
-            isQuiet={isQuiet}>
-            <ChevronDownSmall UNSAFE_className={classNames(stepperStyle, 'spectrum-Stepper-stepDownIcon')} />
-          </ActionButton>
-        </span>
-        }
-      </div>
-    </FocusRing>
-  );
-});
+    return (
+      <FocusRing
+        within
+        focusClass={classNames(
+          inputgroupStyles,
+          'is-focused',
+          classNames(stepperStyle, 'is-focused')
+        )}
+        focusRingClass={classNames(
+          inputgroupStyles,
+          'focus-ring',
+          classNames(stepperStyle, 'focus-ring')
+        )}
+        autoFocus={autoFocus}>
+        <div
+          {...styleProps}
+          {...numberFieldProps}
+          ref={ref}
+          className={className}>
+          <TextFieldBase
+            isQuiet={isQuiet}
+            inputClassName={classNames(stepperStyle, 'spectrum-Stepper-input')}
+            inputRef={inputRef}
+            labelProps={labelProps}
+            inputProps={inputFieldProps} />
+          {showStepper && (
+            <span
+              className={classNames(stepperStyle, 'spectrum-Stepper-buttons')}
+              role="presentation">
+              <ActionButton
+                UNSAFE_className={classNames(
+                  stepperStyle,
+                  'spectrum-Stepper-stepUp',
+                  'spectrum-ActionButton'
+                )}
+                {...incrementButtonProps}
+                isQuiet={isQuiet}>
+                <ChevronUpSmall
+                  UNSAFE_className={classNames(
+                    stepperStyle,
+                    'spectrum-Stepper-stepUpIcon'
+                  )} />
+              </ActionButton>
+              <ActionButton
+                UNSAFE_className={classNames(
+                  stepperStyle,
+                  'spectrum-Stepper-stepDown',
+                  'spectrum-ActionButton'
+                )}
+                {...decrementButtonProps}
+                isQuiet={isQuiet}>
+                <ChevronDownSmall
+                  UNSAFE_className={classNames(
+                    stepperStyle,
+                    'spectrum-Stepper-stepDownIcon'
+                  )} />
+              </ActionButton>
+            </span>
+          )}
+        </div>
+      </FocusRing>
+    );
+  }
+);

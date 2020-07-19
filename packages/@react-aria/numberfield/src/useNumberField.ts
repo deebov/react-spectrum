@@ -22,19 +22,23 @@ import {useMessageFormatter} from '@react-aria/i18n';
 import {useTextField} from '@react-aria/textfield';
 
 interface NumberFieldProps extends AriaNumberFieldProps, SpinButtonProps {
-  decrementAriaLabel?: string,
-  incrementAriaLabel?: string
+  decrementAriaLabel?: string;
+  incrementAriaLabel?: string;
 }
 
 interface NumberFieldAria {
-  labelProps: LabelHTMLAttributes<HTMLLabelElement>,
-  inputFieldProps: HTMLAttributes<HTMLInputElement>,
-  numberFieldProps: HTMLAttributes<HTMLDivElement>,
-  incrementButtonProps: AriaButtonProps,
-  decrementButtonProps: AriaButtonProps
+  labelProps: LabelHTMLAttributes<HTMLLabelElement>;
+  inputFieldProps: HTMLAttributes<HTMLInputElement>;
+  numberFieldProps: HTMLAttributes<HTMLDivElement>;
+  incrementButtonProps: AriaButtonProps;
+  decrementButtonProps: AriaButtonProps;
 }
 
-export function useNumberField(props: NumberFieldProps, state: NumberFieldState, ref: RefObject<HTMLInputElement>): NumberFieldAria {
+export function useNumberField(
+  props: NumberFieldProps,
+  state: NumberFieldState,
+  ref: RefObject<HTMLInputElement>
+): NumberFieldAria {
   let {
     decrementAriaLabel,
     incrementAriaLabel,
@@ -53,45 +57,53 @@ export function useNumberField(props: NumberFieldProps, state: NumberFieldState,
     decrement,
     decrementToMin,
     value,
+    validate,
     validationState
   } = state;
 
   const formatMessage = useMessageFormatter(intlMessages);
   const inputId = useId();
 
-  const {spinButtonProps} = useSpinButton({
-    isDisabled,
-    isReadOnly,
-    isRequired,
-    maxValue,
-    minValue,
-    onIncrement: increment,
-    onIncrementToMax: incrementToMax,
-    onDecrement: decrement,
-    onDecrementToMin: decrementToMin,
-    value
-  });
+  const {
+    spinButtonProps,
+    incrementButtonProps: incButtonProps,
+    decrementButtonProps: decButtonProps
+  } = useSpinButton(
+    {
+      isDisabled,
+      isReadOnly,
+      isRequired,
+      maxValue,
+      onValidate: validate,
+      minValue,
+      onIncrement: increment,
+      onIncrementToMax: incrementToMax,
+      onDecrement: decrement,
+      onDecrementToMin: decrementToMin,
+      value
+    },
+    ref
+  );
 
   incrementAriaLabel = incrementAriaLabel || formatMessage('Increment');
   decrementAriaLabel = decrementAriaLabel || formatMessage('Decrement');
+  const canStep = isDisabled || validationState === 'invalid' || isReadOnly;
 
-  const incrementButtonProps: AriaButtonProps = {
+  const incrementButtonProps: AriaButtonProps = mergeProps(incButtonProps, {
     'aria-label': incrementAriaLabel,
     'aria-controls': inputId,
     excludeFromTabOrder: true,
-    isDisabled: isDisabled || (value >= maxValue) || isReadOnly,
-    onPress: increment
-  };
-  const decrementButtonProps: AriaButtonProps = {
+    isDisabled: canStep || Number(value) >= maxValue
+  });
+  const decrementButtonProps: AriaButtonProps = mergeProps(decButtonProps, {
     'aria-label': decrementAriaLabel,
     'aria-controls': inputId,
     excludeFromTabOrder: true,
-    isDisabled: isDisabled || (value <= minValue || isReadOnly),
-    onPress: decrement
-  };
+    isDisabled: canStep || Number(value) <= minValue
+  });
 
   useEffect(() => {
-    const handleInputScrollWheel = e => {
+    const handleInputScrollWheel = (e) => {
       // If the input isn't supposed to receive input, do nothing.
       // TODO: add focus
       if (isDisabled || isReadOnly) {
@@ -106,38 +118,38 @@ export function useNumberField(props: NumberFieldProps, state: NumberFieldState,
       }
     };
 
-    document.getElementById(inputId).addEventListener(
-      'wheel',
-      handleInputScrollWheel,
-      {passive: false}
-    );
+    document
+      .getElementById(inputId)
+      .addEventListener('wheel', handleInputScrollWheel, {passive: false});
     return () => {
-      document.getElementById(inputId).removeEventListener(
-        'wheel',
-        handleInputScrollWheel
-      );
+      document
+        .getElementById(inputId)
+        .removeEventListener('wheel', handleInputScrollWheel);
     };
   }, [inputId, isReadOnly, isDisabled, decrement, increment]);
 
   let domProps = filterDOMProps(props, {labelable: true});
-  let {labelProps, inputProps} = useTextField(mergeProps(spinButtonProps, {
-    autoFocus,
-    value: '' + value,
-    onChange: state.setValue,
-    validationState,
-    autoComplete: 'off',
-    'aria-label': props['aria-label'] || null,
-    'aria-labelledby': props['aria-labelledby'] || null,
-    id: inputId,
-    isDisabled,
-    isReadOnly,
-    isRequired,
-    min: minValue,
-    max: maxValue,
-    placeholder: formatMessage('Enter a number'),
-    type: 'number',
-    step
-  }), ref);
+  let {labelProps, inputProps} = useTextField(
+    mergeProps(spinButtonProps, {
+      autoFocus,
+      value,
+      onChange: state.setValue,
+      validationState,
+      autoComplete: 'off',
+      'aria-label': props['aria-label'] || null,
+      'aria-labelledby': props['aria-labelledby'] || null,
+      id: inputId,
+      isDisabled,
+      isReadOnly,
+      isRequired,
+      min: minValue,
+      max: maxValue,
+      placeholder: formatMessage('Enter a number'),
+      type: 'number',
+      step
+    }),
+    ref
+  );
 
   return {
     numberFieldProps: mergeProps(domProps, {

@@ -92,7 +92,7 @@ export function useSelectableItem(options: SelectableItemOptions): SelectableIte
         focusWithoutScrolling(ref.current);
       }
     }
-  }, [ref, isFocused, manager.focusedKey, manager.isFocused]);
+  }, [ref, isFocused, manager.focusedKey, manager.isFocused, focus]);
 
   let itemProps: SelectableItemAria['itemProps'] = {
     tabIndex: isFocused ? 0 : -1,

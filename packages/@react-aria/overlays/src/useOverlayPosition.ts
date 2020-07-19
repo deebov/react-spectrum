@@ -112,7 +112,7 @@ export function useOverlayPosition(props: AriaPositionProps): PositionAria {
         crossOffset
       })
     );
-  }, deps);
+  }, [boundaryElement, containerPadding, crossOffset, direction, isOpen, offset, overlayRef, placement, scrollRef, shouldFlip, shouldUpdatePosition, targetRef]);
 
   // Update position when anything changes
   useEffect(updatePosition, deps);

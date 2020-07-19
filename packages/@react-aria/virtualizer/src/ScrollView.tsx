@@ -119,7 +119,7 @@ function ScrollView(props: ScrollViewProps, ref: RefObject<HTMLDivElement>) {
     return () => {
       clearTimeout(state.scrollTimeout);
     };
-  }, []);
+  }, [state.scrollTimeout]);
 
   useLayoutEffect(() => {
     // TODO: resize observer
